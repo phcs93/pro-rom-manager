@@ -23,6 +23,9 @@ console.log(`True number of duplicate titles: ${Object.values(groupedRoms).filte
 
 console.log();
 
+// unique roms
+const unique = Object.values(groupedRoms).filter(g => g.length === 1);
+
 // (World)
 const world = Object.values(groupedRoms).filter(g => 
     g.length > 1 && 
@@ -159,6 +162,13 @@ if (fs.existsSync(notParsedRomsFolder)) fs.rmSync(notParsedRomsFolder, { recursi
 
 fs.mkdirSync(parsedRomsFolder);
 fs.mkdirSync(notParsedRomsFolder);
+
+// move unique roms to parsed folder
+for (const romGroup of unique) {
+    for (const rom of romGroup) {
+        fs.copyFileSync(`${romsFolder}/${rom.romName}`, `${parsedRomsFolder}/${rom.romName}`);
+    }
+}
 
 // selects the correct rom in each duplicated group based on name pattern
 function moveToParsed(groups, pattern) {
